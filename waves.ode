@@ -1,0 +1,219 @@
+#### A mathematical model for recurrent spreading depolarizations
+#### C. Conte, R. Lee, M. Sartar, D. Terman
+#### J. Computational Neuroscience
+
+# Gas constant, temperature, Faraday's constant
+
+p R=8310
+p Temp=310.0
+p F=96485
+frt=R*Temp/F
+phi(v)=v/frt
+
+################
+####  Neuron
+################
+
+# Fast sodium
+p pna=1e-05
+p pnal=2e-09
+p thm=-34.,sigm=5.
+minf(v)=1./(1.+exp(-(v-thm)/sigm))
+ina(v,n,nae,nai)=PNa*(minf(v)^3*(1-n)+pnal)*F*phi(v)*(Nae*exp(-phi(v))-Nai)/(exp(-phi(v))-1)
+
+# NaP
+p pnap=3e-08
+p taubar=10000
+p thmp=-40,sigmp=6
+p thhp=-48,sighp=-6
+p vt=-49,sig=6
+p phihp=.05
+minfp(v)=1./(1.+exp(-(v-thmp)/sigmp))
+hinfp(v)=1./(1.+exp(-(v-thhp)/sighp))
+tauhp(v)=taubar/cosh((v-vt)/(2*sig))
+inap(v,hp,nae,nai)=PNap*minfp(v)*hp*F*phi(v)*(Nae*exp(-phi(v))-Nai)/(exp(-phi(v))-1)
+
+# IK
+p pk=7e-05
+p pkl=4e-07
+p thn=-55.,sgn=14.
+p taun0=.05,taun1=.27,thnt=-40,sn=-12
+p phin=.8
+ninf(v)=1./(1.+exp(-(v-thn)/sgn))
+taun(v)=taun0+taun1/(1+exp(-(v-thnt)/sn))
+ik(v,n,ke,ki)=PK*(n^4+pkl)*F*phi(v)*(ke*exp(-phi(v))-ki)/(exp(-phi(v))-1)
+
+# NMDA
+p pnmda=3e-06
+p thetat=-10,trise=2,tdecay=1,alphan=.5
+binf(v)=1/(1+exp(-(v-thetat)/16.13))
+p pca=3
+sinfg(x)=1./(1.+exp(-(x-thg)/sigmag))
+p thg=.01
+p sigmag=.001
+
+inanmda[1..25]=Pnmda*sg[j]*binf(v[j])*F*phi(v[j])*(Nae[j]*exp(-phi(v[j]))-Nai[j])/(exp(-phi(v[j]))-1)
+iknmda[1..25]=Pnmda*sg[j]*binf(v[j])*F*phi(v[j])*(ke[j]*exp(-phi(v[j]))-ki[j])/(exp(-phi(v[j]))-1)
+icanmda[1..25]=pca*2*Pnmda*sg[j]*binf(v[j])*F*phi(2*v[j])*(cae[j]*exp(-phi(2*v[j]))-cai[j])/(exp(-phi(2*v[j]))-1)
+inmda[1..25]=inanmda[j]+iknmda[j]+icanmda[j]
+
+# Cl leak
+p pcl=2e-07
+icl[1..25]=-Pcl*F*phi(-v[j])*(cle[j]*exp(-phi(-v[j]))-cli[j])/(exp(-phi(-v[j]))-1)
+
+# Neuron Na-K ATPase
+p imax=5
+ipump[1..25]=imax/(((1+2/ke[j])^2)*(1+7.7/nai[j])^3)
+inapump[1..25]=3*ipump[j]
+ikpump[1..25]=-2*ipump[j]
+
+# Diffusion
+kdiff[1...1]=dk*(ke[j+1]-ke[j])
+kdiff[2..24]=dk*(ke[j+1]+ke[j-1]-2*ke[j])
+kdiff[25..25]=dk*(ke[j-1]-ke[j])
+
+nadiff[1...1]=dna*(nae[j+1]-nae[j])
+nadiff[2..24]=dna*(nae[j+1]+nae[j-1]-2*nae[j])
+nadiff[25..25]=dna*(nae[j-1]-nae[j])
+
+gdiff[1...1]=dg*(glut[j+1]-glut[j])
+gdiff[2..24]=dg*(glut[j+1]+glut[j-1]-2*glut[j])
+gdiff[25..25]=dg*(glut[j-1]-glut[j])
+
+p dk=.002
+p dna=.001333
+p dg=.0021
+
+# Differential equations
+v[1..25]'= -(ina(v[j],n[j],nae[j],nai[j])+inap(v[j],hp[j],nae[j],nai[j])+ik(v[j],n[j],ke[j],ki[j])+icl[j]+ipump[j]+inmda[j])
+n[1..25]'= phin*(ninf(v[j])-n[j])/taun(v[j])
+hp[1..25]'=phihp*(hinfp(v[j])-hp[j])/tauhp(v[j])
+sg[1..25]'=-sg[j]/tdecay+alphan*sinfg(glut[j])*(1-sg[j])
+
+#####################
+####  Astrocytes
+####################
+p pnaa=.015e-06
+inaa(v,nae,nai)=PNaa*F*phi(v)*(Nae*exp(-phi(v))-Nai)/(exp(-phi(v))-1)
+
+p pka=6e-06
+ika(v,ke,ki)=PKa*F*phi(v)*(ke*exp(-phi(v))-ki)/(exp(-phi(v))-1)
+
+p imaxa[1..4]=.08
+p imaxa[5..9]=.12
+p imaxa[10..14]=.16
+p imaxa[15..19]=.2
+p imaxa[20..25]=.24
+ipumpa(ke,nai,imaxa)=imaxa/(((1+2/ke)^2)*(1+10/nai)^3)
+
+# Na-glut co-transporter
+p hr=.5
+p gnagl=3e-05
+enagl[1..25]=(frt/2)*ln(((nae[j]/naia[j])^3)*(kia[j]/ke[j])*(glut[j]/glui[j])*hr)
+inagl[1..25]=gnagl*(va[j]-enagl[j])
+aux inagl[1..25]=inagl[j]
+
+# Differential Equation
+
+va[1..25]'=-(ika(va[j],ke[j],kia[j])+inaa(va[j],nae[j],naia[j])+ipumpa(ke[j],naia[j],imaxa[j])+inagl[j])
+
+#########################
+####  Ion Concentrations
+########################
+
+# Volumes(um^3) and Areas (um^2)
+p S=922
+p voln=2160
+p delta=.05
+vole=delta*voln
+
+p Sa=1600
+p vola=2000 
+
+# Conversion factors from uA/cm^2 to mM/ms
+c1=10.0*s/(F*voln)
+c2=10.0*s/(F*vole)
+c3a=10*sa/(F*vola)
+c3e=10*sa/(F*vole)
+
+# Na+, K+ & Cl-
+ke[1..25]'=c2*(ik(v[j],n[j],ke[j],ki[j])+ikpump[j]+iknmda[j])+kdiff[j]+c3e*(ika(va[j],ke[j],kia[j])-2*ipumpa(ke[j],naia[j],imaxa[j])-inagl[j])+gkb*(k0-ke[j])
+nai[1..25]'=-c1*(ina(v[j],n[j],nae[j],nai[j])+inap(v[j],hp[j],nae[j],nai[j])+inapump[j]+inanmda[j])
+nae[1..25]'=c2*(ina(v[j],n[j],nae[j],nai[j])+inap(v[j],hp[j],nae[j],nai[j])+inapump[j]+inanmda[j])+nadiff[j]+c3e*(inaa(va[j],nae[j],naia[j])+3*ipumpa(ke[j],naia[j],imaxa[j])+(3)*inagl[j])+gnab*(na0-nae[j])
+ki[1..25]'=-c1*(ik(v[j],n[j],ke[j],ki[j])+ikpump[j]+iknmda[j])
+kia[1..25]'=-c3a*(ika(va[j],ke[j],kia[j])-2*ipumpa(ke[j],naia[j],imaxa[j])-inagl[j])
+naia[1..25]'=-c3a*(inaa(va[j],nae[j],naia[j])+3*ipumpa(ke[j],naia[j],imaxa[j])+(3)*inagl[j])
+cle[1..25]'=-c2*icl[j]+gclb*(cl0-cle[j])
+cli[1..25]'=c1*icl[j]
+
+p gnab=1e-05
+p na0=140
+p gkb=2e-05
+p k0=4
+p cl0=110
+p gclb=6e-06
+
+# Glutamate
+glut[1..25]'=c3e*inagl[j]+gdiff[j]
+glui[1..25]=(1/c3e)*(gltot-c3a*glut[j])
+gltot=c3e*glui0+c3a*glut0
+p glui0=1
+p glut0=.001
+
+# Ca2+
+cae[1..25]'=c2*(icanmda[j])+gcab*(cae0-cae[j])
+cai[1..25]'=-fi*c1*(icanmda[j])-fi*(e*(jserca[j]-jerout[j]))/(vc*minute*second)
+her[1..25]'=(dinh-(cai[j]+dinh)*her[j])/tau
+caer[1..25]'=fi*(e*(jserca[j]-jerout[j]))/(ve*minute*second)
+
+jerout[1..25]=(vip3*((ip3/(ip3+dip3))^3)*((cai[j]/(cai[j]+dact))^3)*(her[j]^3)+vleak)*(caer[j]-cai[j])
+jserca[1..25]=vserca*cai[j]^2/(kserca^2+cai[j]^2)
+
+p gcab=3e-05
+p cae0=3
+p minute=60
+p second=1000
+p vg=1.0
+p pcytosol=0.5
+p dcytosol=75
+p per=0.10
+p der=1000
+p fi=.01
+e=vg*per*der
+vc=vg*pcytosol
+ve=vg*per
+p vip3=3000
+p vleak=0.01
+p dip3=0.25
+p dinh=.5
+p dact=1
+p tau=4
+p vserca=110
+p kserca=0.4
+p ip3=.3
+
+i v[1..25]=-80
+i n[1..25]=0.15
+i hp[1..25]=0.9
+i sg[1..25]=.00
+i va[1..25]=-80
+i kia[1..25]=130
+i naia[1..25]=2
+i ke[1..25]=4
+i nai[1..25]=2
+i nae[1..25]=135
+i ki[1..25]=140
+i cli[1..25]=6
+i cle[1..25]=110
+i glut[1..25]=.0001
+i cae[1..25]=3
+i cai[1..25]=.0126
+i her[1..25]=0.9754
+i caer[1..25]=10
+
+### XPP settings
+
+@ dt=.5,total=50000,meth=qualrk,tolerance=.0000001
+@ xp=t,yp=v1,xlo=0,xhi=50000,ylo=-80,yhi=0.,bound=500000,maxstor=1500000
+
+done

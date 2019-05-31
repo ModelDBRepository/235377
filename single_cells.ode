@@ -1,0 +1,216 @@
+######   A mathematical model for recurrent spreading depolarizations
+######	 C. Conte, R. Lee, M. Sarkar, D. Terman
+######   Journal of Computational Neuroscience
+
+# Gas constant, temperature, Faraday's constant
+p R=8310
+p Temp=310.0
+p F=96485
+frt=R*Temp/F
+phi(v)=v/frt
+
+###################################################
+######  Neurons
+###################################################
+
+#########
+# Currents
+#########
+
+# Fast Na
+P pna=1e-05
+p pnal=2e-09
+p thm=-34.,sigm=5.
+minf(v)=1./(1.+exp(-(v-thm)/sigm))
+ina(v,n,nae,nai)=PNa*(minf(v)^3*(1-n)+pnal)*F*phi(v)*(Nae*exp(-phi(v))-Nai)/(exp(-phi(v))-1)
+
+# NaP
+p pnap=3e-08
+p taubar=10000
+p thmp=-40,sigmp=6
+p thhp=-48,sighp=-6
+p vt=-49,sig=6
+p phihp=.05
+minfp(v)=1./(1.+exp(-(v-thmp)/sigmp))
+hinfp(v)=1./(1.+exp(-(v-thhp)/sighp))
+tauhp(v)=taubar/cosh((v-vt)/(2*sig))
+inap(v,hp,nae,nai)=PNap*minfp(v)*hp*F*phi(v)*(Nae*exp(-phi(v))-Nai)/(exp(-phi(v))-1)
+
+# IK
+p pk=7e-05
+p pkl=4e-07
+p thn=-55.,sgn=14.
+p taun0=.05,taun1=.27,thnt=-40,sn=-12
+p phin=.8
+ninf(v)=1./(1.+exp(-(v-thn)/sgn))
+taun(v)=taun0+taun1/(1+exp(-(v-thnt)/sn))
+ik(v,n,ke,ki)=PK*(n^4+pkl)*F*phi(v)*(ke*exp(-phi(v))-ki)/(exp(-phi(v))-1)
+
+# NMDA
+p pnmda=3e-06
+p thetat=-10,trise=2,tdecay=1,alphag=.5
+binf(v)=1/(1+exp(-(v-thetat)/16.13))
+p pca=3
+p thg=.01,sigmag=.001
+sinfg(x)=1./(1.+exp(-(x-thg)/sigmag))
+inanmda=Pnmda*sg*binf(v)*F*phi(v)*(Nae*exp(-phi(v))-Nai)/(exp(-phi(v))-1)
+iknmda=Pnmda*sg*binf(v)*F*phi(v)*(ke*exp(-phi(v))-ki)/(exp(-phi(v))-1)
+icanmda=pca*2*Pnmda*sg*binf(v)*F*phi(2*v)*(cae*exp(-phi(2*v))-cai)/(exp(-phi(2*v))-1)
+inmda=inanmda+iknmda+icanmda
+
+# Cl leak
+p pcl=2e-07
+icl(v,cle,cli)=-Pcl*F*phi(-v)*(cle*exp(-phi(-v))-cli)/(exp(-phi(-v))-1)
+
+# Neuron Na-K ATPase pump
+p imax=5
+ipump=imax/(((1+2/ke)^2)*(1+7.7/nai)^3)
+inapump=3*ipump
+ikpump=-2*ipump
+
+#########
+# Differential equations
+#########
+
+v'= -(ina(v,n,nae,nai)+inap(v,hp,nae,nai)+ik(v,n,ke,ki)+icl(v,cle,cli)+ipump+inmda)
+n'= phin*(ninf(v)-n)/taun(v)
+hp'=phihp*(hinfp(v)-hp)/tauhp(v)
+sg'=-sg/tdecay+alphag*sinfg(glut)*(1-sg)
+
+
+###################################################
+######  Astrocytes
+###################################################
+
+#########
+# Currents
+#########
+
+p pka=4.8e-06
+ika(v,ke,ki)=PKa*F*phi(v)*(ke*exp(-phi(v))-ki)/(exp(-phi(v))-1)
+
+p pnaa=.015e-06
+inaa(v,nae,nai)=PNaa*F*phi(v)*(Nae*exp(-phi(v))-Nai)/(exp(-phi(v))-1)
+
+p eps=.00003
+p imin=.08
+imaxa'=eps*(imin-imaxa)
+i imaxa=5
+ipumpa(ke,nai)=imaxa/(((1+2/ke)^2)*(1+10/nai)^3)
+
+# Na-glut co-transporter (in astrocyte)
+p hr=.5
+p gnagl=3e-05
+enagl=(frt/2)*ln(((nae/naia)^3)*(kia/ke)*(glut/glui)*hr)
+inagl=gnagl*(va-enagl)
+
+#########
+# Differential equation
+#########
+va'=-(ika(va,ke,kia)+inaa(va,nae,naia)+ipumpa(ke,naia)+inagl)
+
+###################################################
+######  Ion concentrations
+###################################################
+
+# Volume (um^3) and Area (um^2) of neuron
+p voln=2160
+p s=922
+
+# Volume and Area of astrocyte
+p Sa=1600
+p vola=2000 
+
+# Volume of extracellular space
+p alpha0=.05
+vole=alpha0*voln
+
+# Conversion factors from uA/cm^2 to mM/ms
+cfn=10.0*s/(F*voln)
+cfne=10.0*s/(F*vole)
+cfa=10*sa/(F*vola)
+cfae=10*sa/(F*vole)
+
+# Na+, K+ & Cl-
+
+ki'=-cfn*(ik(v,n,ke,ki)+ikpump+iknmda)
+ke'=cfne*(ik(v,n,ke,ki)+ikpump+iknmda)+cfae*(ika(va,ke,kia)-2*ipumpa(ke,naia)-inagl)+gkb*(k0-ke)
+nai'=-cfn*(ina(v,n,nae,nai)+inap(v,hp,nae,nai)+inapump+inanmda)
+nae'=cfne*(ina(v,n,nae,nai)+inap(v,hp,nae,nai)+inapump+inanmda)+cfae*(inaa(va,nae,naia)+3*ipumpa(ke,naia)+(3)*inagl)+gnab*(na0-nae)
+kia'=-cfa*(ika(va,ke,kia)-2*ipumpa(ke,naia)-inagl)
+naia'=-cfa*(inaa(va,nae,naia)+3*ipumpa(ke,naia)+(3)*inagl)
+
+cli'=cfn*icl(v,cle,cli)
+cle'=-cfne*icl(v,cle,cli)+gclb*(cl0-cle)
+
+p gnab=1e-05,gkb=2e-05,gclb=6e-06
+p na0=140,k0=4,cl0=110
+
+# Glutamate
+
+glut'=cfae*inagl
+gltot=cfae*glui0+cfa*glut0
+p glui0=1, glut0=.001
+glui=(1/cfae)*(gltot-cfa*glut)
+
+
+# Ca2+
+cai'=-fi*cfn*(icanmda)-fi*(per*der*(jserca-jerout))/(pcytosol*minute*second)
+caer'=fi*(per*der*(jserca-jerout))/(per*minute*second)
+cae'=cfne*icanmda+gcab*(cae0-cae)
+her'=(dinh-(cai+dinh)*her)/tau
+
+jerout=(vip3*((ip3/(ip3+dip3))^3)*((cai/(cai+dact))^3)*(her^3)+vleak)*(caer-cai)
+jserca=vserca*cai^2/(kserca^2+cai^2)
+
+p minute=60
+p second=1000
+p ip3=.3
+p pcytosol=0.5
+p dcytosol=75
+p per=0.10
+p der=1000
+p fi=.01
+p vip3=3000
+p vleak=0.01
+p dip3=0.25
+p dinh=.5
+p dact=1
+p tau=4
+p vserca=110
+p kserca=0.4
+p gcab=6e-06
+p cae0=3
+
+
+###################################################
+######  Initial conditions
+###################################################
+
+i v=-80
+i n=0.144
+i hp=0.995
+i sg=0.
+i va=-76
+i kia=132
+i naia=6.2
+
+i ke=7
+i nai=1.75
+i nae=134
+i ki=142
+i cli=5.824
+i cle=111.26
+i glut=.0001
+
+i cae=3
+i cai=.001
+i her=0.99
+i caer=.057
+
+### XPP settings
+
+@ dt=.5,total=50000,meth=qualrk,tolerance=.0000001
+@ xp=t,yp=v,xlo=0,xhi=50000,ylo=-80,yhi=0.,bound=500000,maxstor=1000000
+
+done

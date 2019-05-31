@@ -1,0 +1,400 @@
+## Set file for single_cells.ode on Wed Dec 13 10:25:52 2017
+19   Number of equations and auxiliaries
+72   Number of parameters
+# Numerical stuff
+1    nout
+40    nullcline mesh
+8   Qual RK
+4000000  total
+0.5  DeltaT
+0  T0
+0  Transient
+500000  Bound
+1e-12  DtMin
+1  DtMax
+1e-07  Tolerance
+0.001  Abs. Tolerance
+0  Max Delay
+100   Eigenvector iterates
+0.001  Eigenvector tolerance
+0.001  Newton tolerance
+0  Poincare plane
+1e-05  Boundary value tolerance
+1e-05  Boundary value epsilon
+20   Boundary value iterates
+0   Poincare None
+1   Poincare variable
+1   Poincare sign
+0   Stop on Section
+0   Delay flag
+4000000  Current time
+4000000  Last Time
+1   MyStart
+1   INFLAG
+# Delays
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+# Bndry conds
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+# Old ICs
+-58.81137764996264  V
+0.432356959113168  N
+0.8538036058454112  HP
+0.002082416993486555  SG
+0.08000000000046259  IMAXA
+-39.02998140466573  VA
+149.1319593988436  KI
+16.41369332787475  KE
+1.285281166395606  NAI
+116.0901080839575  NAE
+71.95968297063686  KIA
+66.24314341750998  NAIA
+12.52512787448607  CLI
+111.3857579081404  CLE
+0.004525191854168424  GLUT
+0.0009387716976116532  CAI
+0.05904737645069838  CAER
+2.801142735550066  CAE
+0.9981259767393746  HER
+# Ending  ICs
+-62.52638004813665  V
+0.3687463987794178  N
+0.9166237311852015  HP
+0.3333333333333334  SG
+0.08000000000046259  IMAXA
+-26.3566736314976  VA
+138.9603521990604  KI
+10.84005294617766  KE
+7.222072086379609  NAI
+129.0789158035363  NAE
+29.67248554159209  KIA
+108.5285057274632  NAIA
+11.03269938780366  CLI
+112.0102445460947  CLE
+0.05796814244940238  GLUT
+0.00176875116910499  CAI
+0.1920086511206416  CAER
+0.1877525063186725  CAE
+0.9964749701503084  HER
+# Parameters
+8310  R
+310  Temp
+96485  F
+1e-05  pna
+2e-09  pnal
+-34  thm
+5  sigm
+3e-08  pnap
+10000  taubar
+-40  thmp
+6  sigmp
+-48  thhp
+-6  sighp
+-49  vt
+6  sig
+0.05  phihp
+6.999999999999999e-05  pk
+4e-07  pkl
+-55  thn
+14  sgn
+0.05  taun0
+0.27  taun1
+-40  thnt
+-12  sn
+0.8  phin
+3e-06  pnmda
+-10  thetat
+2  trise
+1  tdecay
+0.5  alphag
+3  pca
+0.01  thg
+0.001  sigmag
+2e-07  pcl
+5  imax
+4.8e-06  pka
+1.5e-08  pnaa
+3e-05  eps
+0.08  imin
+0.5  hr
+3e-05  gnagl
+2160  voln
+922  s
+1600  Sa
+2000  vola
+0.05  alpha0
+1e-05  gnab
+2e-05  gkb
+6e-06  gclb
+140  na0
+4  k0
+110  cl0
+1  glui0
+0.001  glut0
+60  minute
+1000  second
+0.3  ip3
+0.5  pcytosol
+75  dcytosol
+0.1  per
+1000  der
+0.01  fi
+3000  vip3
+0.01  vleak
+0.25  dip3
+0.5  dinh
+1  dact
+4  tau
+110  vserca
+0.4  kserca
+6e-06  gcab
+3  cae0
+# Graphics
+0.7071097251469876  rm
+-0.4999999999826661  rm
+0.4999958366025516  rm
+0.7071038372138505  rm
+0.5000041633974482  rm
+-0.4999999999826661  rm
+0  rm
+0.7071038372138505  rm
+0.7071097251469876  rm
+0    
+1    
+1    
+1    
+0    
+0    
+1    
+1    
+1    
+0    
+0    
+1    
+1    
+1    
+0    
+0    
+1    
+1    
+1    
+0    
+0    
+1    
+1    
+1    
+0    
+0    
+1    
+1    
+1    
+0    
+0    
+1    
+1    
+1    
+0    
+0    
+1    
+1    
+1    
+0    
+0    
+1    
+1    
+1    
+0    
+0    
+1    
+1    
+1    
+0    
+-1000   
+1000   
+0    
+0   3DFlag
+1   Timeflag
+0   Colorflag
+0   Type
+1  color scale
+0   minscale
+4000000   xmax
+0   xmin
+0   ymax
+-90   ymin
+12   zmax
+-12   zmin
+2000000   
+5e-07   
+-45   
+0.02222222222222222   
+0   
+0.08333333333333333   
+45   Theta
+45   Phi
+0    xshft
+0    yshft
+0    zshft
+0   xlo
+-90   ylo
+0   
+-80   
+4000000   xhi
+0   yhi
+50000   
+0   
+# Transpose variables etc
+V
+2   n columns
+1   n rows
+1   row skip
+1   col skip
+1   row 0
+# Coupling stuff for H funs
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+# Array plot stuff
+
+1   NCols
+0   Row 1
+50   NRows
+8   RowSkip
+0  Zmin
+1  Zmax
+# Torus information 
+0    Torus flag 1=ON
+6.283185307179586  Torus period
+# Range information
+R
+-1   eq-range stab col
+0   shoot flag 1=on
+10   eq-range steps
+0  eq_range low
+1  eq_range high
+V
+V
+20   Range steps
+0   Cycle color 1=on
+1   Reset data 1=on
+1   Use old I.C.s 1=yes
+0  Par1 low
+0  Par2 low
+1  Par1 high
+1  Par2 high
+R
+0   BVP side
+0   color cycle flag 1=on
+10   BVP range steps
+0  BVP range low
+1  BVP range high
+RHS etc ...
+dV/dT=-(INA(V,N,NAE,NAI)+INAP(V,HP,NAE,NAI)+IK(V,N,KE,KI)+ICL(V,CLE,CLI)+IPUMP+INMDA)
+dN/dT=PHIN*(NINF(V)-N)/TAUN(V)
+dHP/dT=PHIHP*(HINFP(V)-HP)/TAUHP(V)
+dSG/dT=-SG/TDECAY+ALPHAG*SINFG(GLUT)*(1-SG)
+dIMAXA/dT=EPS*(IMIN-IMAXA)
+dVA/dT=-(IKA(VA,KE,KIA)+INAA(VA,NAE,NAIA)+IPUMPA(KE,NAIA)+INAGL)
+dKI/dT=-CFN*(IK(V,N,KE,KI)+IKPUMP+IKNMDA)
+dKE/dT=CFNE*(IK(V,N,KE,KI)+IKPUMP+IKNMDA)+CFAE*(IKA(VA,KE,KIA)-2*IPUMPA(KE,NAIA)-INAGL)+GKB*(K0-KE)
+dNAI/dT=-CFN*(INA(V,N,NAE,NAI)+INAP(V,HP,NAE,NAI)+INAPUMP+INANMDA)
+dNAE/dT=CFNE*(INA(V,N,NAE,NAI)+INAP(V,HP,NAE,NAI)+INAPUMP+INANMDA)+CFAE*(INAA(VA,NAE,NAIA)+3*IPUMPA(KE,NAIA)+(3)*INAGL)+GNAB*(NA0-NAE)
+dKIA/dT=-CFA*(IKA(VA,KE,KIA)-2*IPUMPA(KE,NAIA)-INAGL)
+dNAIA/dT=-CFA*(INAA(VA,NAE,NAIA)+3*IPUMPA(KE,NAIA)+(3)*INAGL)
+dCLI/dT=CFN*ICL(V,CLE,CLI)
+dCLE/dT=-CFNE*ICL(V,CLE,CLI)+GCLB*(CL0-CLE)
+dGLUT/dT=CFAE*INAGL
+dCAI/dT=-FI*CFN*(ICANMDA)-FI*(PER*DER*(JSERCA-JEROUT))/(PCYTOSOL*MINUTE*SECOND)
+dCAER/dT=FI*(PER*DER*(JSERCA-JEROUT))/(PER*MINUTE*SECOND)
+dCAE/dT=CFNE*ICANMDA+GCAB*(CAE0-CAE)
+dHER/dT=(DINH-(CAI+DINH)*HER)/TAU
+
+where ...
+FRT = R*TEMP/F   
+INANMDA = PNMDA*SG*BINF(V)*F*PHI(V)*(NAE*EXP(-PHI(V))-NAI)/(EXP(-PHI(V))-1)   
+IKNMDA = PNMDA*SG*BINF(V)*F*PHI(V)*(KE*EXP(-PHI(V))-KI)/(EXP(-PHI(V))-1)   
+ICANMDA = PCA*2*PNMDA*SG*BINF(V)*F*PHI(2*V)*(CAE*EXP(-PHI(2*V))-CAI)/(EXP(-PHI(2*V))-1)   
+INMDA = INANMDA+IKNMDA+ICANMDA   
+IPUMP = IMAX/(((1+2/KE)^2)*(1+7.7/NAI)^3)   
+INAPUMP = 3*IPUMP   
+IKPUMP = -2*IPUMP   
+ENAGL = (FRT/2)*LN(((NAE/NAIA)^3)*(KIA/KE)*(GLUT/GLUI)*HR)   
+INAGL = GNAGL*(VA-ENAGL)   
+VOLE = ALPHA0*VOLN   
+CFN = 10.0*S/(F*VOLN)   
+CFNE = 10.0*S/(F*VOLE)   
+CFA = 10*SA/(F*VOLA)   
+CFAE = 10*SA/(F*VOLE)   
+GLTOT = CFAE*GLUI0+CFA*GLUT0   
+GLUI = (1/CFAE)*(GLTOT-CFA*GLUT)   
+JEROUT = (VIP3*((IP3/(IP3+DIP3))^3)*((CAI/(CAI+DACT))^3)*(HER^3)+VLEAK)*(CAER-CAI)   
+JSERCA = VSERCA*CAI^2/(KSERCA^2+CAI^2)   
+
+User-defined functions:
+PHI(V) = V/FRT  
+MINF(V) = 1./(1.+EXP(-(V-THM)/SIGM))  
+INA(V,N,NAE,NAI) = PNA*(MINF(V)^3*(1-N)+PNAL)*F*PHI(V)*(NAE*EXP(-PHI(V))-NAI)/(EXP(-PHI(V))-1)  
+MINFP(V) = 1./(1.+EXP(-(V-THMP)/SIGMP))  
+HINFP(V) = 1./(1.+EXP(-(V-THHP)/SIGHP))  
+TAUHP(V) = TAUBAR/COSH((V-VT)/(2*SIG))  
+INAP(V,HP,NAE,NAI) = PNAP*MINFP(V)*HP*F*PHI(V)*(NAE*EXP(-PHI(V))-NAI)/(EXP(-PHI(V))-1)  
+NINF(V) = 1./(1.+EXP(-(V-THN)/SGN))  
+TAUN(V) = TAUN0+TAUN1/(1+EXP(-(V-THNT)/SN))  
+IK(V,N,KE,KI) = PK*(N^4+PKL)*F*PHI(V)*(KE*EXP(-PHI(V))-KI)/(EXP(-PHI(V))-1)  
+BINF(V) = 1/(1+EXP(-(V-THETAT)/16.13))  
+SINFG(X) = 1./(1.+EXP(-(X-THG)/SIGMAG))  
+ICL(V,CLE,CLI) = -PCL*F*PHI(-V)*(CLE*EXP(-PHI(-V))-CLI)/(EXP(-PHI(-V))-1)  
+IKA(V,KE,KI) = PKA*F*PHI(V)*(KE*EXP(-PHI(V))-KI)/(EXP(-PHI(V))-1)  
+INAA(V,NAE,NAI) = PNAA*F*PHI(V)*(NAE*EXP(-PHI(V))-NAI)/(EXP(-PHI(V))-1)  
+IPUMPA(KE,NAI) = IMAXA/(((1+2/KE)^2)*(1+10/NAI)^3)  
